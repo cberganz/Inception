@@ -84,7 +84,6 @@ RUN which allows you to execute commands in your container. This command will cr
 ```
 RUN apt-get update -y
     && apt-get install curl gnupp -yp
-    ...
 ```
 ADD which allows you to add files to your container (The following exemple will copy the current working directory from the host inside the FOLDER_NAME of the container)
 ```
@@ -106,6 +105,33 @@ CMD which allows you to define the default command when running your Docker cont
 ```
 CMD ./a.out
 ```
+### Docker ignore
+
+Put a ".dockerignore" file in the Dockerfile directory to avoid copying selected files when running the command ADD.
+
+### Use the registry
+#### Store an image on the registry
+- 1 - Connect to the Docker Hub : https://hub.docker.com
+- 2 - Click on "Create directory" and chose the image name
+- 3 - Publish the image :
+```
+docker tag IMAGE_NAME:latest YOUR_USERNAME/DOCKER_NAME:latest
+```
+or
+```
+docker tag IMAGE_ID:latest YOUR_USERNAME/DOCKER_NAME:latest
+```
+*latest : this allows versionning. You can name the version as you want. Just keep in mind the latest will be called by default when you run it.
+#### Get an image from the registry
+Show the list of images for a name pattern :
+```
+Docker search IMAGE_NAME
+```
+Get an image :
+```
+docker pull IMAGE_NAME
+```
+
 
 ### Some Docker vocabulary
 dockerfile
