@@ -78,14 +78,34 @@ docker system prune
 ### Dockerfile
 FROM which allows you to define the source image;
 ```
-FROM debian:9
+FROM debian:10
 ```
-RUN which allows you to execute commands in your container;
-ADD which allows you to add files to your container;
-WORKDIR which allows you to define your working directory;
-EXPOSE which allows you to define the default listening ports;
-VOLUME which allows you to define the usable volumes;
-CMD which allows you to define the default command when running your Docker containers.
+RUN which allows you to execute commands in your container. This command will create a new layer and the calls to it should be limited as much as possible to limit the size of the container.
+```
+RUN apt-get update -y
+    && apt-get install curl gnupp -yp
+    ...
+```
+ADD which allows you to add files to your container (The following exemple will copy the current working directory from the host inside the FOLDER_NAME of the container)
+```
+ADD . /FOLDER_NAME/
+```
+WORKDIR which allows you to define working directory at launch of the container
+```
+WORKDIR /FOLDER_NAME
+```
+EXPOSE which allows you to define the default listening ports
+```
+EXPOSE 8080
+```
+VOLUME which allows you to define the usable volumes. In fact, you can share volumes between the host and the container.
+```
+VOLUME /app/logs
+```
+CMD which allows you to define the default command when running your Docker containers
+```
+CMD ./a.out
+```
 
 ### Some Docker vocabulary
 dockerfile
