@@ -1,0 +1,77 @@
+version: '3.8'
+
+volumes:
+     mariadb-volume:
+          driver_opts:
+               device: /home/charles/data/db_data
+               o: bind
+               type: none
+     wordpress-volume:
+          driver_opts:
+               device: /home/charles/data/wp_data
+               o: bind
+               type: none
+
+networks:
+     wp-network:
+
+services:
+
+     nginx:
+          container_name: nginx
+          build:
+               context: ./requirements/nginx
+          volumes:
+               - wordpress-volume:/var/www/${DOMAIN_NAME}
+          networks:
+               - wp-network
+          ports:
+               - 443:443
+          depends_on:
+               - mariadb
+               - wordpress
+          restart: always
+
+     mariadb:
+          container_name: mariadb
+          build:
+               context: ./requirements/mariadb
+          volumes:
+               - mariadb-volume:/var/lib/mysql
+          environment:
+               - DB_NAME=${DB_NAME}
+               - DB_ADMIN=${DB_ADMIN}
+               - DB_ROOT_PASSWD=${DB_ROOT_PASSWD}
+               - DB_ADMIN_PASSWD=${DB_ADMIN_PASSWD}
+               - DB_USER=${DB_USER}
+               - DB_USER_PASSWD=${DB_USER_PASSWD}
+          networks:
+               - wp-network
+          restart: unless-stopped
+
+     wordpress:
+          container_name: wordpress
+          build:
+               context: ./requirements/wordpress
+               args:
+                    - WWW_DIR=${WWW_DIR}
+          environment:
+               - WWW_DIR=${WWW_DIR}
+               - URL=${URL}
+               - WP_ADMIN=${WP_ADMIN}
+               - WP_ADMIN_PASSWD=${WP_ADMIN_PASSWD}
+               - WP_ADMIN_EMAIL=${WP_ADMIN_EMAIL}
+               - DB_NAME=${DB_NAME}
+               - DB_USER=${DB_USER}
+               - DB_USER_PASSWD=${DB_USER_PASSWD}
+               - MARIADB_HOST=${MARIADB_HOST}
+               - WP_USER=${WP_USER}
+               - WP_USER_PASSWD=${WP_USER_PASSWD}
+               - WP_USER_EMAIL=${WP_USER_EMAIL}
+          volumes:
+               - wordpress-volume:${WWW_DIR}
+          networks:
+               - wp-network
+          depends_on:
+               - mariadb
+          restart: unless-stopped
