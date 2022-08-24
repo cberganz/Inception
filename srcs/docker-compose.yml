@@ -30,6 +30,7 @@ services:
           depends_on:
                - mariadb
                - wordpress
+          init: true
           restart: always
 
      mariadb:
@@ -47,6 +48,7 @@ services:
                - DB_USER_PASSWD=${DB_USER_PASSWD}
           networks:
                - wp-network
+          init: true
           restart: unless-stopped
 
      wordpress:
@@ -74,4 +76,5 @@ services:
                - wp-network
           depends_on:
                - mariadb
+          init: true
           restart: unless-stopped
