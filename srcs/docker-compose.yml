@@ -1,5 +1,100 @@
 version: '3.8'
 
+service-base: &service-base
+     init: true
+     restart: unless-stopped
+
+env-db-base: &env-db
+     - DB_NAME=${DB_NAME}
+     - MARIADB_HOST=${MARIADB_HOST}
+     - DB_ROOT_PASSWD=${DB_ROOT_PASSWD}
+     - DB_ADMIN=${DB_ADMIN}
+     - DB_ADMIN_PASSWD=${DB_ADMIN_PASSWD}
+     - DB_USER=${DB_USER}
+     - DB_USER_PASSWD=${DB_USER_PASSWD}
+
+env-wp-base: &env-db
+     - WWW_DIR=${WWW_DIR}
+     - URL=${URL}
+     - WP_ADMIN=${WP_ADMIN}
+     - WP_ADMIN_PASSWD=${WP_ADMIN_PASSWD}
+     - WP_ADMIN_EMAIL=${WP_ADMIN_EMAIL}
+     - WP_USER=${WP_USER}
+     - WP_USER_PASSWD=${WP_USER_PASSWD}
+     - WP_USER_EMAIL=${WP_USER_EMAIL}
+
+services:
+     nginx:
+          <<: *service-base
+          build:
+               context: ./requirements/nginx
+          image: nginx
+          volumes:
+               - wordpress-volume:/var/www/${DOMAIN_NAME}:ro
+          networks:
+               - wp-network
+          ports:
+               - 443:443
+          depends_on:
+               - mariadb
+               - wordpress
+
+     mariadb:
+          <<: *service-base
+          build:
+               context: ./requirements/mariadb
+          image: mariadb
+          volumes:
+               - mariadb-volume:/var/lib/mysql:rw
+          environment:
+               <<: *env-db
+          networks:
+               - wp-network
+
+     wordpress:
+          <<: *service-base
+          build:
+               context: ./requirements/wordpress
+               args:
+                    - WWW_DIR=${WWW_DIR}
+          image: wordpress
+          environment:
+               <<: *env-db
+               <<: *env-wp
+          volumes:
+               - wordpress-volume:${WWW_DIR}:rw
+          networks:
+               - wp-network
+          depends_on:
+               - mariadb
+
+     adminer:
+          <<: *service-base
+          build:
+               context: ./requirements/bonus/adminer
+          image: adminer
+          networks:
+               - wp-network
+          depends_on:
+               - mariadb
+          ports:
+               - "9000:8080"
+
+     ftp-server:
+          <<: *service-base
+          build:
+               context: ./requirements/bonus/ftp-server
+          image: ftp-server
+          volumes:
+               - wordpress-volume:/home/cberganz
+          networks:
+               - wp-network
+          ports:
+               - "21:21"
+               - "20:20"
+          depends-on:
+               - wordpress
+
 volumes:
      mariadb-volume:
           driver_opts:
@@ -14,96 +109,3 @@ volumes:
 
 networks:
      wp-network:
-
-services:
-
-     nginx:
-          container_name: nginx
-          build:
-               context: ./requirements/nginx
-          volumes:
-               - wordpress-volume:/var/www/${DOMAIN_NAME}
-          networks:
-               - wp-network
-          ports:
-               - 443:443
-          depends_on:
-               - mariadb
-               - wordpress
-          init: true
-          restart: always
-
-     mariadb:
-          container_name: mariadb
-          build:
-               context: ./requirements/mariadb
-          volumes:
-               - mariadb-volume:/var/lib/mysql
-          environment:
-               - DB_NAME=${DB_NAME}
-               - DB_ADMIN=${DB_ADMIN}
-               - DB_ROOT_PASSWD=${DB_ROOT_PASSWD}
-               - DB_ADMIN_PASSWD=${DB_ADMIN_PASSWD}
-               - DB_USER=${DB_USER}
-               - DB_USER_PASSWD=${DB_USER_PASSWD}
-          networks:
-               - wp-network
-          init: true
-          restart: unless-stopped
-
-     wordpress:
-          container_name: wordpress
-          build:
-               context: ./requirements/wordpress
-               args:
-                    - WWW_DIR=${WWW_DIR}
-          environment:
-               - WWW_DIR=${WWW_DIR}
-               - URL=${URL}
-               - WP_ADMIN=${WP_ADMIN}
-               - WP_ADMIN_PASSWD=${WP_ADMIN_PASSWD}
-               - WP_ADMIN_EMAIL=${WP_ADMIN_EMAIL}
-               - DB_NAME=${DB_NAME}
-               - DB_USER=${DB_USER}
-               - DB_USER_PASSWD=${DB_USER_PASSWD}
-               - MARIADB_HOST=${MARIADB_HOST}
-               - WP_USER=${WP_USER}
-               - WP_USER_PASSWD=${WP_USER_PASSWD}
-               - WP_USER_EMAIL=${WP_USER_EMAIL}
-          volumes:
-               - wordpress-volume:${WWW_DIR}
-          networks:
-               - wp-network
-          depends_on:
-               - mariadb
-          init: true
-          restart: unless-stopped
-
-     adminer:
-          container_name: adminer
-          build:
-               context: ./requirements/bonus/adminer
-          networks:
-               - wp-network
-          depends_on:
-               - mariadb
-          ports:
-               - "9000:8080"
-          init: true
-          restart: unless-stopped
-
-     ftp-server:
-          container-name: ftp-server
-          build:
-               context: ./requirements/bonus/ftp-server
-          volumes:
-               - wordpress-volume:/home/cberganz
-          networks:
-               - wp-network
-          ports:
-               - "21:21"
-               - "20:20"
-          depends-on:
-               - wordpress
-          init: true
-          restart: always
