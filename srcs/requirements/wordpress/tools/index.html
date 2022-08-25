@@ -9,10 +9,10 @@
 		<style>
 			h1 {
 				font-size: 50px;
-				font-family: "Arial Black";
+				font-family: "Courier New";
 			}
 			h2 {
-				font-size: 40px;
+				font-size: 35px;
 				font-family: "Courier New";
 			}
 			h3 {
@@ -30,35 +30,57 @@
 				border: none;
 				background-color: rgb(0, 15, 15);
 				color: white;
-				padding: 10px 20px;
+				padding: 20px 40px;
 				text-align: center;
 				text-decoration: none;
 				display: inline-block;
-				font-size: 12px;
+				font-size: 24px;
+				font-family: "Courier New";
 				cursor: pointer;
+			}
+			.container {
+			  height: 1000px;
+			  position: relative;
+			  border: 3px solid none;
+			}
+			.center {
+			  margin: 0;
+			  position: absolute;
+			  top: 50%;
+			  left: 50%;
+			  -ms-transform: translate(-50%, -50%);
+			  transform: translate(-50%, -50%);
 			}
 		</style>
 	</head>
 
 	<body>
 		<!-- Page body -->
-		<h1 align="center">
-			Welcome to my <strong>Inception</strong> project page !
-		</h1>
-		<p align="center">
-			<a href="https://cberganz.42.fr">
-        	    <button>Wordpress</button>
-        	</a>
-        	<a href="http://127.0.0.1:9000">
-        	    <button>Adminer</button>
-        	</a>
-		</p>
-		<p align="center">
-			<img src="https://img.shields.io/github/stars/cberganz?style=for-the-badge"/>
-			<img src="https://img.shields.io/github/followers/cberganz?style=for-the-badge"/>
-		</p>
-		<p align="center">
-			<img src="https://github-readme-stats.vercel.app/api?username=cberganz&theme=blue-green&hide_border=true"/>
-		</p>
+		<h2>
+			Inception
+		</h2>
+		<div class="container">
+			<div class="center">
+				<h1 align="center">
+					Welcome<br>to my <strong>Inception</strong><br>project page !
+				</h1>
+				<p align="center">
+					<a href="https://cberganz.42.fr">
+						<button>Wordpress</button>
+					</a>
+					<a href="http://127.0.0.1:9000">
+						<button>Adminer</button>
+					</a>
+				</p>
+				<br><br><br>
+				<p align="center">
+					<img src="https://img.shields.io/github/stars/cberganz?style=for-the-badge"/>
+					<img src="https://img.shields.io/github/followers/cberganz?style=for-the-badge"/>
+				</p>
+				<p align="center">
+					<img src="https://github-readme-stats.vercel.app/api?username=cberganz&theme=blue-green&hide_border=true"/>
+				</p>
+			</div>
+		</div>
 	</body>
 </html>
