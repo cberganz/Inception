@@ -29,8 +29,8 @@ clean:
 	docker compose -f ${COMPOSE} down
 
 fclean: clean prune
-	sudo rm -rf ${DB_DATA}
-	sudo rm -rf ${WP_DATA}
+#	sudo rm -rf ${DB_DATA}
+#	sudo rm -rf ${WP_DATA}
 
 volume_rm:
 	docker volume rm srcs_mariadb-volume

@@ -1,8 +1,7 @@
 FROM debian:10.12
 
 RUN apt-get -y update \
-	&& apt-get -y install nginx \
-	&& apt-get -y install openssl \
+	&& apt-get -y install nginx openssl \
 	&& mkdir -p /etc/ssl/private \
 	&& mkdir -p /etc/ssl/certs \
 	&& openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
@@ -11,11 +10,11 @@ RUN apt-get -y update \
 		-subj "/C=FR/L=Paris/O=42/CN/cberganz.42.fr/UID=cberganz" \
 	&& adduser --disabled-password --gecos "" nginx
 
-COPY ./conf/default.conf /etc/nginx/http.d/default.conf
+COPY ./conf/default.conf /etc/nginx/http.d/
 
-COPY ./conf/ssl-params.conf /etc/nginx/snippets/ssl-params.conf
+COPY ./conf/ssl-params.conf /etc/nginx/snippets/
 
-COPY ./conf/nginx.conf /etc/nginx/nginx.conf
+COPY ./conf/nginx.conf /etc/nginx/
 
 EXPOSE 443
 

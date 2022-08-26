@@ -1,27 +1,33 @@
 version: '3.8'
 
-service-base: &service-base
+x-service-base: &service-base
      init: true
      restart: unless-stopped
 
-env-db-base: &env-db
-     - DB_NAME=${DB_NAME}
-     - MARIADB_HOST=${MARIADB_HOST}
-     - DB_ROOT_PASSWD=${DB_ROOT_PASSWD}
-     - DB_ADMIN=${DB_ADMIN}
-     - DB_ADMIN_PASSWD=${DB_ADMIN_PASSWD}
-     - DB_USER=${DB_USER}
-     - DB_USER_PASSWD=${DB_USER_PASSWD}
+x-volume-base: &volume-base
+     driver: local
+     driver_opts: &driver-opts
+          o: bind
+          type: none
 
-env-wp-base: &env-db
-     - WWW_DIR=${WWW_DIR}
-     - URL=${URL}
-     - WP_ADMIN=${WP_ADMIN}
-     - WP_ADMIN_PASSWD=${WP_ADMIN_PASSWD}
-     - WP_ADMIN_EMAIL=${WP_ADMIN_EMAIL}
-     - WP_USER=${WP_USER}
-     - WP_USER_PASSWD=${WP_USER_PASSWD}
-     - WP_USER_EMAIL=${WP_USER_EMAIL}
+x-env-db-base: &env-db
+     DB_NAME: ${DB_NAME}
+     MARIADB_HOST: ${MARIADB_HOST}
+     DB_ROOT_PASSWD: ${DB_ROOT_PASSWD}
+     DB_ADMIN: ${DB_ADMIN}
+     DB_ADMIN_PASSWD: ${DB_ADMIN_PASSWD}
+     DB_USER: ${DB_USER}
+     DB_USER_PASSWD: ${DB_USER_PASSWD}
+
+x-env-wp-base: &env-wp
+     WWW_DIR: ${WWW_DIR}
+     URL: ${URL}
+     WP_ADMIN: ${WP_ADMIN}
+     WP_ADMIN_PASSWD: ${WP_ADMIN_PASSWD}
+     WP_ADMIN_EMAIL: ${WP_ADMIN_EMAIL}
+     WP_USER: ${WP_USER}
+     WP_USER_PASSWD: ${WP_USER_PASSWD}
+     WP_USER_EMAIL: ${WP_USER_EMAIL}
 
 services:
      nginx:
@@ -31,10 +37,11 @@ services:
           image: nginx
           volumes:
                - wordpress-volume:/var/www/${DOMAIN_NAME}:ro
+               - adminer-volume:/var/www/adminer:ro
           networks:
-               - wp-network
+               - nginx-network
           ports:
-               - 443:443
+               - '443:443'
           depends_on:
                - mariadb
                - wordpress
@@ -49,7 +56,7 @@ services:
           environment:
                <<: *env-db
           networks:
-               - wp-network
+               - DB-network
 
      wordpress:
           <<: *service-base
@@ -64,9 +71,18 @@ services:
           volumes:
                - wordpress-volume:${WWW_DIR}:rw
           networks:
-               - wp-network
+               - DB-network
+               - nginx-network
           depends_on:
                - mariadb
+
+     static-page:
+          <<: *service-base
+          build:
+               context: ./requirements/bonus/static-page
+          image: static-page
+          networks:
+               - nginx-network
 
      adminer:
           <<: *service-base
@@ -74,38 +90,44 @@ services:
                context: ./requirements/bonus/adminer
           image: adminer
           networks:
-               - wp-network
+               - DB-network
+               - nginx-network
           depends_on:
                - mariadb
-          ports:
-               - "9000:8080"
-
-     ftp-server:
-          <<: *service-base
-          build:
-               context: ./requirements/bonus/ftp-server
-          image: ftp-server
           volumes:
-               - wordpress-volume:/home/cberganz
-          networks:
-               - wp-network
-          ports:
-               - "21:21"
-               - "20:20"
-          depends-on:
-               - wordpress
+               - adminer-volume:/var/www/adminer:ro
 
+#     ftp-server:
+#          <<: *service-base
+#          build:
+#               context: ./requirements/bonus/ftp-server
+#          image: ftp-server
+#          volumes:
+#               - wordpress-volume:/home/cberganz
+#          networks:
+#               - wp-network
+#          ports:
+#               - "21:21"
+#               - "20:20"
+#          depends-on:
+#               - wordpress
+#
 volumes:
      mariadb-volume:
+          <<: *volume-base
           driver_opts:
                device: /home/charles/data/db_data
-               o: bind
-               type: none
+               <<: *driver-opts
+
      wordpress-volume:
+          <<: *volume-base
           driver_opts:
                device: /home/charles/data/wp_data
-               o: bind
-               type: none
+               <<: *driver-opts
+
+     adminer-volume:
 
 networks:
-     wp-network:
+     nginx-network:
+
+     DB-network:
