@@ -38,6 +38,7 @@ services:
           volumes:
                - wordpress-volume:/var/www/${DOMAIN_NAME}:ro
                - adminer-volume:/var/www/adminer:ro
+               - static-page-volume:/var/www/static-page:ro
           networks:
                - nginx-network
           ports:
@@ -83,6 +84,8 @@ services:
           image: static-page
           networks:
                - nginx-network
+          volumes:
+               - static-page-volume:/var/www/static-page:ro
 
      adminer:
           <<: *service-base
@@ -126,6 +129,8 @@ volumes:
                <<: *driver-opts
 
      adminer-volume:
+
+     static-page-volume:
 
 networks:
      nginx-network:
