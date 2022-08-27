@@ -28,6 +28,13 @@ x-env-wp-base: &env-wp
      WP_USER: ${WP_USER}
      WP_USER_PASSWD: ${WP_USER_PASSWD}
      WP_USER_EMAIL: ${WP_USER_EMAIL}
+     WP_REDIS_HOST: ${WP_REDIS_HOST}
+     WP_REDIS_DB: ${WP_REDIS_DB}
+
+x-env-ftp-base: &env-ftp
+     FTP_HOST: ${FTP_HOST}
+     FTP_USER: ${FTP_USER}
+     FTP_PASS: ${FTP_PASS}
 
 services:
      nginx:
@@ -74,6 +81,7 @@ services:
           networks:
                - DB-network
                - nginx-network
+               - redis-network
           depends_on:
                - mariadb
 
@@ -100,21 +108,28 @@ services:
           volumes:
                - adminer-volume:/var/www/adminer:ro
 
-#     ftp-server:
-#          <<: *service-base
-#          build:
-#               context: ./requirements/bonus/ftp-server
-#          image: ftp-server
-#          volumes:
-#               - wordpress-volume:/home/cberganz
-#          networks:
-#               - wp-network
-#          ports:
-#               - "21:21"
-#               - "20:20"
-#          depends-on:
-#               - wordpress
-#
+     redis-cache:
+          <<: *service-base
+          build:
+               context: ./requirements/bonus/redis-cache
+          image: redis-cache
+          networks:
+               - redis-network
+
+     ftp-server:
+          <<: *service-base
+          build:
+               context: ./requirements/bonus/ftp-server
+          image: delfer/alpine-ftp-server
+          volumes:
+               - wordpress-volume:/home/wordpress:rw
+          environment:
+               <<: *env-ftp
+          ports:
+               - "21:21"
+          depends_on:
+               - wordpress
+
 volumes:
      mariadb-volume:
           <<: *volume-base
@@ -136,3 +151,5 @@ networks:
      nginx-network:
 
      DB-network:
+
+     redis-network:

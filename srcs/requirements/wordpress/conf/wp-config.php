@@ -57,6 +57,16 @@ define('NONCE_SALT',       'K+e9k_CMBwJu(<ba,R6kO4[$-:zS~V85^B~[T<bZpm8-hc&#hj%>
 /**#@-*/
 
 /**
+ * Redis cache
+ */
+
+define( 'WP_REDIS_HOST', getenv('WP_REDIS_HOST') ?: '127.0.0.1' );
+define( 'WP_REDIS_PORT', getenv('WP_REDIS_PORT') ?: 6379 );
+define( 'WP_REDIS_TIMEOUT', getenv('WP_REDIS_TIMOUT') ?: 1 );
+define( 'WP_REDIS_READ_TIMEOUT', getenv('WP_REDIS_TIMOUT') ?: 1 );
+define( 'WP_REDIS_DATABASE', getenv('WP_REDIS_DATABASE') ?: 0 );
+
+/**
  * WordPress Database Table prefix.
  *
  * You can have multiple installations in one database if you give each

@@ -2,7 +2,7 @@ FROM debian:10.12
 
 RUN apt-get -y update \
 	&& apt-get install -y mariadb-server mariadb-client
-	
+
 RUN	mkdir -p /var/lib/mysql/run \
 	&& mkdir -p /run/mysqld \
 	&& mkdir -p /var/log/mysql \
