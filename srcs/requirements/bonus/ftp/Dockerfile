@@ -1,20 +1,18 @@
-FROM    debian:10.12
+FROM debian:10.12
 
-RUN     apt-get -y update \
-		&& apt-get -y vsftpd openssl
+RUN apt-get -y update \
+	&& apt-get install -y vsftpd openssl \
+	&& mkdir -p /etc/ssl/private \
+	&& mkdir -p /etc/ssl/certs \
+	&& openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+		-keyout /etc/ssl/private/private.key \
+		-out /etc/ssl/certs/certificate.crt \
+		-subj "/C=FR/L=Paris/O=42/CN/cberganz.42.fr/UID=cberganz"
 
-ARG     WWW_DIR
-ARG     FTP_USER
+COPY conf/vsftpd.conf /etc/
 
-RUN     mkdir -p ${WWW_DIR}
+COPY tools/init.sh /var/www/
 
-#COPY    ./conf/vsftpd.conf /etc/vsftpd/vsftpd.conf
+EXPOSE 21
 
-COPY    ./conf/setup.sh /setup.sh
-
-RUN     adduser -D -h ${WP_DIR} ${FTP_USER} \
-        && chown -R ${FTP_USER}:${FTP_USER} ${WP_DIR} 
-
-EXPOSE  21
-
-CMD     [ "sh" , "setup.sh" ]
+CMD ["bash", "/var/www/init.sh"]

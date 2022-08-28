@@ -34,7 +34,7 @@ x-env-wp-base: &env-wp
 x-env-ftp-base: &env-ftp
      FTP_HOST: ${FTP_HOST}
      FTP_USER: ${FTP_USER}
-     FTP_PASS: ${FTP_PASS}
+     FTP_PWD: ${FTP_PASS}
 
 services:
      nginx:
@@ -116,17 +116,18 @@ services:
           networks:
                - redis-network
 
-     ftp-server:
+     ftp:
           <<: *service-base
           build:
-               context: ./requirements/bonus/ftp-server
-          image: delfer/alpine-ftp-server
+               context: ./requirements/bonus/ftp
+          image: ftp
           volumes:
-               - wordpress-volume:/home/wordpress:rw
+               - wordpress-volume:/home/${FTP_USER}/wordpress:rw
           environment:
                <<: *env-ftp
           ports:
                - "21:21"
+               - "21100-21110:21100-21110"
           depends_on:
                - wordpress
 
