@@ -17,8 +17,6 @@ COPY ./conf/www.conf /etc/php/7.3/fpm/pool.d/
 
 COPY ./conf/wp-config.php ${WWW_DIR}/html/
 
-#COPY ./tools/index.html ${WWW_DIR}/html/home.html
-
 COPY ./tools/init.sh ${WWW_DIR}/html/
 
 WORKDIR ${WWW_DIR}/html/

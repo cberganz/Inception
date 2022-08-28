@@ -1,13 +1,12 @@
-DB_DATA= /home/charles/data/db_data
-WP_DATA= /home/charles/data/wp_data
+# VARIABLES
 
-COMPOSE = srcs/docker-compose.yml
+COMPOSE=docker compose -f srcs/docker-compose.yml -p inception
 
+# GENERAL RULES
 
-all: hosts
-	mkdir -p ${DB_DATA}
-	mkdir -p ${WP_DATA}
-	docker compose -f ${COMPOSE} up --build
+all: hosts data build up
+
+re: fclean volume_rm all
 
 hosts:
 	if grep -R "cberganz.42.fr" /etc/hosts > /dev/null; then \
@@ -16,31 +15,159 @@ hosts:
 		echo '127.0.0.1 cberganz.42.fr' | sudo tee -a /etc/hosts > /dev/null; \
 	fi
 
+data:
+	sudo mkdir -p /home/${USER}/data/db_data
+	sudo mkdir -p /home/${USER}/data/wp_data
+
+# DOCKER RULES
+
 build:
-	docker compose -f ${COMPOSE} up --build
+	${COMPOSE} build
 
 up:
-	docker compose -f ${COMPOSE} up
+	${COMPOSE} up
 
 stop:
-	docker compose -f ${COMPOSE} stop
+	${COMPOSE} stop
 
-clean:
-	docker compose -f ${COMPOSE} down
+ps:
+	docker ps
+
+# CLEAN RULES
 
 fclean: clean prune
-#	sudo rm -rf ${DB_DATA}
-#	sudo rm -rf ${WP_DATA}
+
+clean:
+	${COMPOSE} down
 
 volume_rm:
-	docker volume rm srcs_mariadb-volume
-	docker volume rm srcs_wordpress-volume
+	docker volume rm inception_mariadb-volume
+	docker volume rm inception_wordpress-volume
 
 prune:
 	docker system prune -a --force
 	docker volume prune --force
 	docker network prune --force
 
-re: fclean volume_rm all
+# MARIADB
 
-.PHONY: all build up stop clean fclean re volume_rm
+mariadb_build:
+	${COMPOSE} build mariadb
+
+mariadb_up:
+	${COMPOSE} up mariadb
+
+mariadb_stop:
+	${COMPOSE} stop mariadb
+
+mariadb_rm:
+	${COMPOSE} rm -f mariadb
+
+mariadb_bash:
+	${COMPOSE} exec mariadb bash
+
+# NGINX
+
+nginx_build:
+	${COMPOSE} build nginx
+
+nginx_up:
+	${COMPOSE} up nginx
+
+nginx_stop:
+	${COMPOSE} stop nginx
+
+nginx_rm:
+	${COMPOSE} rm -f nginx
+
+nginx_bash:
+	${COMPOSE} exec nginx bash
+
+# WORDPRESS
+
+wordpress_build:
+	${COMPOSE} build wordpress
+
+wordpress_up:
+	${COMPOSE} up wordpress
+	docker network prune --force
+
+wordpress_stop:
+	${COMPOSE} stop wordpress
+
+wordpress_rm:
+	${COMPOSE} rm -f wordpress
+
+wordpress_bash:
+	${COMPOSE} exec wordpress bash
+
+# STATIC-PAGE
+
+static-page_build:
+	${COMPOSE} build static-page
+
+static-page_up:
+	${COMPOSE} up static-page
+
+static-page_stop:
+	${COMPOSE} stop static-page
+
+static-page_rm:
+	${COMPOSE} rm -f static-page
+
+static-page_bash:
+	${COMPOSE} exec static-page bash
+
+# FTP
+
+ftp_build:
+	${COMPOSE} build ftp
+
+ftp_up:
+	${COMPOSE} up ftp
+
+ftp_stop:
+	${COMPOSE} stop ftp
+
+ftp_rm:
+	${COMPOSE} rm -f ftp
+
+ftp_bash:
+	${COMPOSE} exec ftp bash
+
+# REDIS
+
+redis_build:
+	${COMPOSE} build redis
+
+redis_up:
+	${COMPOSE} up redis
+
+redis_stop:
+	${COMPOSE} stop redis
+
+
+redis_rm:
+	${COMPOSE} rm -f redis
+
+redis_bash:
+	${COMPOSE} exec redis bash
+
+# ADMINER
+
+adminer_build:
+	${COMPOSE} build adminer
+
+adminer_up:
+	${COMPOSE} up adminer
+
+adminer_stop:
+	${COMPOSE} stop adminer
+
+adminer_rm:
+	${COMPOSE} rm -f adminer
+
+adminer_bash:
+	${COMPOSE} exec adminer bash
+
+.PHONY: all re hosts data build up stop ps clean fclean volume_rm prune

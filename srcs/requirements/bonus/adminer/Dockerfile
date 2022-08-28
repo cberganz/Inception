@@ -12,7 +12,7 @@ RUN adduser --disabled-password --gecos "" adminer \
 	&& service php7.3-fpm start \
 	&& chown -R adminer:adminer /run/php
 
-COPY www.conf /etc/php/7.3/fpm/pool.d/
+COPY conf/www.conf /etc/php/7.3/fpm/pool.d/
 
 USER adminer
 

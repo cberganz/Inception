@@ -7,7 +7,7 @@ RUN apt-get -y update \
 	&& openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
 		-keyout /etc/ssl/private/private.key \
 		-out /etc/ssl/certs/certificate.crt \
-		-subj "/C=FR/L=Paris/O=42/CN/cberganz.42.fr/UID=cberganz"
+		-subj "/C=FR/L=Paris/O=42/CN=cberganz.42.fr/UID=cberganz"
 
 COPY conf/vsftpd.conf /etc/
 

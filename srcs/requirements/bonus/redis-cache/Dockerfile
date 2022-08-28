@@ -3,7 +3,7 @@ FROM debian:10.12
 RUN apt-get -y update \
 	&& apt-get install -y redis
 
-COPY redis.conf /
+COPY conf/redis.conf /
 
 USER redis
 

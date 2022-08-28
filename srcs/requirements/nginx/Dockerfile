@@ -7,7 +7,7 @@ RUN apt-get -y update \
 	&& openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
 		-keyout /etc/ssl/private/nginx-self-signed.key \
 		-out /etc/ssl/certs/nginx-self-signed.crt \
-		-subj "/C=FR/L=Paris/O=42/CN/cberganz.42.fr/UID=cberganz" \
+		-subj "/C=FR/L=Paris/O=42/CN=cberganz.42.fr/UID=cberganz" \
 	&& adduser --disabled-password --gecos "" nginx
 
 COPY ./conf/default.conf /etc/nginx/http.d/
