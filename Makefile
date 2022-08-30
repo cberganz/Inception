@@ -16,8 +16,8 @@ hosts:
 	fi
 
 data:
-	sudo mkdir -p /home/${USER}/data/db_data
-	sudo mkdir -p /home/${USER}/data/wp_data
+	mkdir -p /home/${USER}/data/db_data
+	mkdir -p /home/${USER}/data/wp_data
 
 # DOCKER RULES
 

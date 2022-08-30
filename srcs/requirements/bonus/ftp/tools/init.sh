@@ -1,4 +1,4 @@
-if [ -f ".init_done" ]; then
+if [ -f "/home/${FTP_USER}/wordpress/.init_ftp_done" ]; then
     echo "FTP initialization already done !"
 else
     echo "FTP initialization not done !"
@@ -6,7 +6,7 @@ else
 
 	mkdir -p  /var/run/vsftpd/empty
 
-	adduser --disabled-password --gecos "" ${FTP_USER}
+	adduser --no-create-home --disabled-password --gecos "" ${FTP_USER} > /dev/null
 	echo "${FTP_USER}:${FTP_PWD}" | /usr/sbin/chpasswd
 
 	chmod ug-w "/home/$FTP_USER"
@@ -19,7 +19,7 @@ else
 	echo ${FTP_USER} > /etc/vsftpd.userlist
 
     echo "Initialization done successfully !"
-    touch .init_done
+    touch /home/${FTP_USER}/wordpress/.init_ftp_done
 
 fi
 

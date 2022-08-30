@@ -1,6 +1,6 @@
 #!/bin/sh
 
-if [ -f ".init_done" ]; then
+if [ -f "/var/lib/mysql/.init_done" ]; then
     echo "Database initialization already done !"
 else
     echo "Database initialization not done !"
@@ -20,7 +20,7 @@ else
 	rm init.sql
 
     echo "Initialization done successfully !"
-    touch .init_done
+    touch /var/lib/mysql/.init_done
 
 fi
 

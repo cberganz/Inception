@@ -131,22 +131,36 @@ services:
           depends_on:
                - wordpress
 
+     grafana:
+          <<: *service-base
+          image: grafana/grafana
+          volumes:
+               - grafana-volume:/var/lib/grafana
+          ports:
+               - "3000:3000"
+               - "8086:8086"
+          networks:
+               - nginx-network
+               - DB-network
+
 volumes:
      mariadb-volume:
           <<: *volume-base
           driver_opts:
-               device: /home/charles/data/db_data
+               device: /home/${USER}/data/db_data
                <<: *driver-opts
 
      wordpress-volume:
           <<: *volume-base
           driver_opts:
-               device: /home/charles/data/wp_data
+               device: /home/${USER}/data/wp_data
                <<: *driver-opts
 
      adminer-volume:
 
      static-page-volume:
+
+     grafana-volume:
 
 networks:
      nginx-network:
