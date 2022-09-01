@@ -140,7 +140,8 @@ services:
                - mariadb
           volumes:
                - bk-volume:/bk:rw
-               - mariadb-volume:/db:ro
+               - mariadb-volume:/db:rw
+          init: true
 
 volumes:
      mariadb-volume:

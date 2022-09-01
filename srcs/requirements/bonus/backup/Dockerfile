@@ -1,10 +1,9 @@
-FROM debian:10.12
+FROM debian:buster
 
-RUN apt-get -y update \
-	&& mkdir /bk
+RUN apt-get -y update
 
-ADD ./tools/backup.sh /bk/
+ADD ./tools/backup.sh /
 
-WORKDIR /bk
+WORKDIR /
 
 CMD ["bash", "backup.sh"]

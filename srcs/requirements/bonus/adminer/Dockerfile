@@ -1,4 +1,4 @@
-FROM debian:10.12
+FROM debian:buster
 
 RUN apt-get -y update \
 	&& apt-get install -y php php-phar php-fpm php-common php-iconv php-json php-gd php-curl php-xml php-mysqli php-imap php-cgi php-soap php-xmlrpc php-posix php-gettext php-ldap php-ctype php-dom

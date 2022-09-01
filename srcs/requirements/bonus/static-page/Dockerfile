@@ -1,7 +1,6 @@
-FROM debian:10.12
+FROM debian:buster
 
 RUN apt-get -y update \
-#	&& apt-get -y install php php-fpm php-common php-json php-gd php-curl php-xml php-mysql php-imap php-cgi php-soap php-xmlrpc php-gettext php-ldap \
 	&& apt-get install -y php php-phar php-fpm php-common php-iconv php-json php-gd php-curl php-xml php-mysqli php-imap php-cgi php-soap php-xmlrpc php-posix php-gettext php-ldap php-ctype php-dom \
 	&& mkdir -p /var/www/static-page
 

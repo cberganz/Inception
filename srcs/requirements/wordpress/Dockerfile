@@ -1,4 +1,4 @@
-FROM debian:10.12
+FROM debian:buster
 
 ARG WWW_DIR
 
