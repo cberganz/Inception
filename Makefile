@@ -18,6 +18,7 @@ hosts:
 data:
 	mkdir -p /home/${USER}/data/db_data
 	mkdir -p /home/${USER}/data/wp_data
+	mkdir -p /home/${USER}/data/backup
 
 # DOCKER RULES
 
@@ -43,6 +44,7 @@ clean:
 volume_rm:
 	docker volume rm inception_mariadb-volume
 	docker volume rm inception_wordpress-volume
+	docker volume rm inception_bk-volume
 
 prune:
 	docker system prune -a --force
