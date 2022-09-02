@@ -9,4 +9,4 @@ USER redis
 
 EXPOSE 6379
 
-ENTRYPOINT ["redis-server", "--protected-mode", "no"]
+ENTRYPOINT ["redis-server", "/redis.conf"]

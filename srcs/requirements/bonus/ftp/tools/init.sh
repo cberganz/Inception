@@ -4,15 +4,13 @@ else
     echo "FTP initialization not done !"
     echo "Starting FTP initialization..."
 
-	mkdir -p  /var/run/vsftpd/empty
+	mkdir -p /var/run/vsftpd/empty
 
 	adduser --no-create-home --disabled-password --gecos "" ${FTP_USER} > /dev/null
+	su - ${FTP_USER}
 	echo "${FTP_USER}:${FTP_PWD}" | /usr/sbin/chpasswd
 
-	chmod ug-w "/home/$FTP_USER"
 	mkdir -p "/home/$FTP_USER/wordpress"
-	chown -R "$FTP_USER:$FTP_USER" "/home/$FTP_USER/wordpress"
-	chmod ug+rw "/home/$FTP_USER/wordpress"
 
 	touch /var/log/vsftpd.log
 

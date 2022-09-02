@@ -22,6 +22,11 @@ else
 					--role=contributor \
 					--allow-root
 
+	echo "Setting up redis..."
+	wp plugin install redis-cache --allow-root > /dev/null
+	wp plugin activate redis-cache --allow-root
+	wp redis enable --allow-root
+
     echo "Initialization done successfully !"
     touch .init_done
 

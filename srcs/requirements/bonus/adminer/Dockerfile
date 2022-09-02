@@ -16,8 +16,6 @@ COPY conf/www.conf /etc/php/7.3/fpm/pool.d/
 
 USER adminer
 
-RUN php-fpm7.3 --test
-
 WORKDIR /var/www/adminer
 
 EXPOSE 9000
