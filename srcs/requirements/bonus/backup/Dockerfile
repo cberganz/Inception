@@ -3,8 +3,10 @@ FROM debian:buster
 RUN apt-get -y update \
 	&& apt-get install -y cron
 
-ADD ./tools/backup.sh /
+COPY ./tools/backup.sh /etc/
 
-WORKDIR /
+COPY ./tools/crontab_set.sh /etc/
 
-CMD ["bash", "backup.sh"]
+RUN chmod u+x /etc/crontab_set.sh /etc/backup.sh
+
+CMD ["/etc/crontab_set.sh"]
