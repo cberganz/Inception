@@ -1,13 +1,26 @@
-# Inception
-**A Docker LEMP stack small infrastructure**
-
-#### Stateless vs Stateful
->A MySQL database is stateful: it stores a state. If you switch your database off and on again, you will find it in the same state.
-
->An HTTP protocol is stateless: the application does not store any state. With each new HTTP request, the same series of actions will be performed.
-
-#### **A container is immutable**
->A container does not ensure the durability of data. In this case, a volume will have to be created to store the data in a perennial way.
+<div class="tg-wrap">
+<img align="left" width=250px src="https://i.ibb.co/hFG3PJR/grade.png" alt="grade" border="0">
+<br><br>
+ <table>
+ <thead>
+   <tr>
+     <th>Project name</th>
+     <th>Inception</th>
+   </tr>
+ </thead>
+ <tbody>
+   <tr>
+     <td>Description</td>
+     <td align="center">A Docker LEMP stack infrastructure with additional Redis, Adminer, FTP and<br>Backup services</td>
+   </tr>
+   <tr>
+     <td>Technologies</td>
+     <td align="center"><a href="#"><img alt="Docker" src="https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white"></a> <a href="#"><img alt="Nginx" src="https://img.shields.io/badge/nginx-%23009639.svg?style=for-the-badge&logo=nginx&logoColor=white"></a> <a href="#"><img alt="Wordpress" src="https://img.shields.io/badge/WordPress-%23117AC9.svg?style=for-the-badge&logo=WordPress&logoColor=white"></a> <a href="#"><img alt="HTML" src="https://img.shields.io/badge/HTML-E34F26.svg?logo=html5&logoColor=white&style=for-the-badge"></a> <a href="#"><img alt="MariaDB" src="https://img.shields.io/badge/MariaDB-003545?style=for-the-badge&logo=mariadb&logoColor=white"></a> <br><a href="#"><img alt="Bash" src="https://img.shields.io/badge/Bash-121011.svg?logo=gnu-bash&logoColor=white&style=for-the-badge"></a> <a href="#"><img alt="Redis" src="https://img.shields.io/badge/redis-%23DD0031.svg?style=for-the-badge&logo=redis&logoColor=white"></a></td>
+   </tr>
+ </tbody>
+ </table>
+</div>
+<br>
 
 ## Get started with Docker
 ### Docker installation
@@ -132,10 +145,10 @@ Get an image :
 docker pull IMAGE_NAME
 ```
 
+#### Stateless vs Stateful
+>A MySQL database is stateful: it stores a state. If you switch your database off and on again, you will find it in the same state.
 
-### Some Docker vocabulary
-dockerfile
-recette
-layer
+>An HTTP protocol is stateless: the application does not store any state. With each new HTTP request, the same series of actions will be performed.
 
-
+#### **A container is immutable**
+>A container does not ensure the durability of data. In this case, a volume will have to be created to store the data in a perennial way.
